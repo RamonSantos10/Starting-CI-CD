@@ -1,14 +1,13 @@
-const cor = document.getElementById("cor");
+const idade = document.getElementById("idade");
+const ano = document.getElementById("ano");
 
+console.log(new Date().getFullYear())
 
-console.log('ué')
+function calculaIdade(i) {
+    ano.innerHTML = `Você nasceu em ${new Date().getFullYear() - Number(idade.value)}`
+    return new Date().getFullYear() - i;
+}
 
-cor.addEventListener("input", (e) => {
-    console.log(cor.value);
-    document.body.style.backgroundColor = cor.value;
-});
-
-
-
+module.exports = { calculaIdade };
 
 
