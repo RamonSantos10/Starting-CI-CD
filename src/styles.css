@@ -15,6 +15,18 @@ div {
     gap: 1rem;
 }
 
+
+input {
+    width: 20rem;
+    height: 5rem;
+    font-size: 3em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+}
+
 #cor {
    width: 20vw;
 }
