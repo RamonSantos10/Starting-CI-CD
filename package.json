@@ -10,7 +10,11 @@
     "test": "jest"
   },
   "jest": {
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "testRunner": "jest-circus/runner",
+    "transform": {},
+    "moduleFileExtensions": ["js", "json"],
+    "testMatch": ["**/tests/**/*.test.js"]
   },
   "repository": {
     "type": "git",
