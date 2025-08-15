@@ -59,6 +59,8 @@ function funDiasParaNiver(ano, mes, dia, dataReferencia = null) {
   return diasParaNiver;
 }
 
+
+
 module.exports = {
   funDiasParaNiver
 }
