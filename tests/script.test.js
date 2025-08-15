@@ -1,5 +1,5 @@
-const {calculaIdade} = require("../src/script");
+const { funDiasParaNiver } = require("../src/script");
 
-test("Verificar idade", () => {
-  expect(calculaIdade(10)).toBe(new Date().getFullYear() - 10);
+test("Diferença de dias até o próximo aniversário", () => {
+  expect(funDiasParaNiver(2005, 9, 27)).toBe(44);
 });
