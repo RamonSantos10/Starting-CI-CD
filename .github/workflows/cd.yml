@@ -19,25 +19,11 @@ jobs:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
+      - name: Baixar artifact do CI (dist)
+        uses: actions/download-artifact@v4
         with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Instalar dependências
-        run: npm ci
-
-      - name: Build do projeto
-        run: |
-          echo "Criando build do projeto..."
-          mkdir -p dist
-          cp -r src dist/
-          cp index.html dist/
-          echo "Build concluído!"
+          name: dist
+          path: dist
 
       - name: Vercel Pull (Preview)
         if: ${{ github.event.workflow_run.head_branch != 'main' || github.event.workflow_run.event == 'pull_request' }}
