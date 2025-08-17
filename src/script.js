@@ -59,8 +59,14 @@ function funDiasParaNiver(ano, mes, dia, dataReferencia = null) {
   return diasParaNiver;
 }
 
-module.exports = {
-  funDiasParaNiver
+// Export para testes em Node/Jest (CommonJS)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { funDiasParaNiver };
+}
+
+// Disponibiliza a função calcular no browser para o onclick do botão
+if (typeof window !== 'undefined') {
+  window.calcular = calcular;
 }
 
 
