@@ -36,7 +36,7 @@ jobs:
         run: |
           echo "Criando build do projeto..."
           mkdir -p dist
-          cp -r src/* dist/
+          cp -r src dist/
           cp index.html dist/
           echo "Build concluído!"
 
