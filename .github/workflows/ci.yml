@@ -9,39 +9,40 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TZ: America/Sao_Paulo
-    
+
     steps:
-    # 1. Fazer checkout do código
-    - name: Checkout do código
-      uses: actions/checkout@v4
-    
-    # 2. Configurar Node.js
-    - name: Configurar Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-        cache: 'npm'
-    
-    # 3. Instalar dependências
-    - name: Instalar dependências
-      run: npm install
-    
-    # 4. Executar testes
-    - name: Executar testes
-      run: npm test
-    
-    # 5. Build do projeto
-    - name: Build do projeto
-      run: |
-        echo "Criando build do projeto..."
-        mkdir -p dist
-        cp -r src/* dist/
-        cp index.html dist/
-        echo "Build concluído!"
-    
-    # 6. Deploy (apenas na branch main)
-    - name: Deploy
-      if: github.ref == 'refs/heads/main'
-      run: |
-        echo "Deploy realizado com sucesso!"
-        echo "Arquivos prontos para produção em ./dist/"
+      # 1. Fazer checkout do código
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2. Configurar Node.js
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      # 3. Instalar dependências
+      - name: Instalar dependências
+        run: npm install
+
+      # 4. Executar testes
+      - name: Executar testes
+        run: npm test
+      
+
+      # 5. Build do projeto
+      - name: Build do projeto
+        run: |
+          echo "Criando build do projeto..."
+          mkdir -p dist
+          cp -r src/* dist/
+          cp index.html dist/
+          echo "Build concluído!"
+
+      # 6. Deploy (apenas na branch main)
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Deploy realizado com sucesso!"
+          echo "Arquivos prontos para produção em ./dist/"

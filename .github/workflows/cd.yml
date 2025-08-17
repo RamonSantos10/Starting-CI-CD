@@ -1,0 +1,55 @@
+name: CD - Deploy Vercel
+
+on:
+  workflow_run:
+    workflows: ["CI/CD Simples"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Deploy para Vercel
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    env:
+      TZ: America/Sao_Paulo
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build do projeto
+        run: |
+          echo "Criando build do projeto..."
+          mkdir -p dist
+          cp -r src/* dist/
+          cp index.html dist/
+          echo "Build concluído!"
+
+      - name: Vercel Pull (Preview)
+        if: ${{ github.event.workflow_run.head_branch != 'main' || github.event.workflow_run.event == 'pull_request' }}
+        run: npx vercel pull --yes --environment=preview --token "$VERCEL_TOKEN"
+
+      - name: Deploy Preview na Vercel
+        if: ${{ github.event.workflow_run.head_branch != 'main' || github.event.workflow_run.event == 'pull_request' }}
+        run: npx vercel deploy dist --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
+
+      - name: Vercel Pull (Production)
+        if: ${{ github.event.workflow_run.head_branch == 'main' }}
+        run: npx vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
+
+      - name: Deploy para Produção na Vercel
+        if: ${{ github.event.workflow_run.head_branch == 'main' }}
+        run: npx vercel deploy --prod dist --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
