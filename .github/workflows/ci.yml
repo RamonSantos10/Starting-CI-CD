@@ -1,5 +1,5 @@
-name: CI/CD Simples
-
+name: CI
+description: Continuous Integration to Tests, Build, Checkout
 # Executa o workflow em push e pull request
 on: [push, pull_request]
 
@@ -39,10 +39,3 @@ jobs:
           cp -r src dist/
           cp index.html dist/
           echo "Build concluído!"
-
-      # 6. Deploy (apenas na branch main)
-      - name: Deploy
-        if: github.ref == 'refs/heads/main'
-        run: |
-          echo "Deploy realizado com sucesso!"
-          echo "Arquivos prontos para produção em ./dist/"
