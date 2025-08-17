@@ -1,5 +1,6 @@
 name: CI
-description: Continuous Integration to Tests, Build, Checkout
+description: >
+  Continuous Integration to Tests, Build, Checkout
 # Executa o workflow em push e pull request
 on: [push, pull_request]
 

@@ -1,5 +1,6 @@
 name: CD - Deploy Vercel
-
+description: >
+  Continuous Delivery to Build and Deploy on Vercel
 on:
   workflow_run:
     workflows: ["CI/CD Simples"]
