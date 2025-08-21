@@ -31,7 +31,18 @@ input {
 }
 
 #resultado {
-   text-align: center;
+  width: 20rem;
+  min-height: 4rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: #f7f7f7;
+  color: #171717;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.4;
 }
 
 #cor {
