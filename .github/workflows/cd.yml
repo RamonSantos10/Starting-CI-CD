@@ -1,33 +1,48 @@
-name: Deploy Vercel
-
+name: CD - Deploy Vercel
+description: >
+  Continuous Delivery to Build and Deploy on Vercel
 on:
-  push:
-    branches:
-      - main
-      - develop   # ou outras branches para preview
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+permissions:
+  contents: read
+  actions: read
 
 jobs:
   deploy:
+    name: Deploy para Vercel
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
+      TZ: America/Sao_Paulo
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Baixar artifact do CI (dist)
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
 
-      - name: Instalar dependências
-        run: npm install
+      - name: Vercel Pull (Preview)
+        if: ${{ github.event.workflow_run.head_branch != 'main' || github.event.workflow_run.event == 'pull_request' }}
+        run: npx vercel pull --yes --environment=preview --token "$VERCEL_TOKEN"
 
-      - name: Deploy
-        run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            npx vercel deploy --prod --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
-          else
-            npx vercel deploy --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
-          fi
+      - name: Deploy Preview na Vercel
+        if: ${{ github.event.workflow_run.head_branch != 'main' || github.event.workflow_run.event == 'pull_request' }}
+        run: npx vercel deploy dist --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
 
+      - name: Vercel Pull (Production)
+        if: ${{ github.event.workflow_run.head_branch == 'main' }}
+        run: npx vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
 
-          
+      - name: Deploy para Produção na Vercel
+        if: ${{ github.event.workflow_run.head_branch == 'main' }}
+        run: npx vercel deploy --prod dist --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
