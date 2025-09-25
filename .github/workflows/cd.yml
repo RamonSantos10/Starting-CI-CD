@@ -34,21 +34,19 @@ jobs:
       - name: Limpar link anterior (.vercel)
         run: rm -rf .vercel
 
-      - name: Setup Vercel Project Link
-        run: |
-          mkdir -p .vercel
-          cat > .vercel/project.json << JSON
-          {
-            "projectId": "${VERCEL_PROJECT_ID}",
-            "orgId": "${VERCEL_ORG_ID}"
-          }
-          JSON
-
-      - name: Debug Vercel Context
+      - name: Debug Vercel Context (Before Link)
         run: |
           echo "Vercel CLI version:" && npx vercel --version
-          echo "whoami:" && npx vercel whoami --token "$VERCEL_TOKEN" || true
-          echo "conteudo de .vercel/project.json:" && cat .vercel/project.json || true
+          echo "whoami:" && npx vercel whoami --token "$VERCEL_TOKEN" || echo "whoami failed"
+
+      - name: Link Vercel Project
+        run: |
+          npx vercel link --yes --project starting-ci-cd --token "$VERCEL_TOKEN"
+
+      - name: Debug Vercel Context (After Link)
+        run: |
+          echo "conteudo de .vercel/project.json:" && cat .vercel/project.json || echo "project.json not found"
+          echo "ls -la .vercel:" && ls -la .vercel || echo ".vercel directory not found"
 
       - name: Vercel Pull (Preview)
         if: ${{ github.event.workflow_run.head_branch != 'main' || github.event.workflow_run.event == 'pull_request' }}
